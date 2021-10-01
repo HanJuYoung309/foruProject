@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.kr.board.service.mapper.BoardMapper">
+
+<select id="list" resultType="co.kr.board.vo.BoardVO">
+
+<!-- CDATA 부등호 표시를 기호로 인식한다 부등호로 인식되기 위해서 CDATA를 쓴다 -->
+<![CDATA[
+      SELECT * FROM
+      (
+      SELECT ROW_NUMBER() OVER(ORDER BY bnum DESC) rn, 
+            bnum, 
+            title, 
+            writer, 
+            bdate, 
+            bcnt, 
+            bcontent, 
+            btype 
+      FROM  jyboard
+         ]]>
+         <!-- 동적 쿼리 ->조건문에 따라 실행되는 쿼리 -->
+	<if test="keywrod != null and keyword != ''">
+		WHERE ${type} LIKE '%'||#{keyword}||'%'
+		ROW_NUMBER() OVER(ORDER BY bnum DESC)
+	</if>
+      <![CDATA[
+      )a
+      WHERE a.rn > #{startRn}
+      AND a.rn  <= #{endRn} 
+      ]]>
+
+</select>
+
+	<select id="total" resultType="int">
+	
+		select count(*) from jyboard
+	
+	</select>
+
+	<!-- 상세보기 -->
+	<select id="getBoard" resultType="co.kr.board.vo.BoardVO">
+		select * from jyboard where bnum=#{bnum}
+	</select>
+	
+	<!-- 글번호 자동증가  -->
+	<select id="cntMax" resultType="int">
+	  select max(bnum) from jyboard
+	</select>
+	
+	<!-- 글 추가  -->
+	<insert id="insert" parameterType="co.kr.board.vo.BoardVO">
+	insert into jyboard (bnum,title,writer,bcontent,btype)
+	values(#{board.bnum},#{board.title},#{board.writer},#{board.bcontent},#{board.btype})
+	</insert>
+	
+	<update id="update">
+	  update jyboard set 
+	  title=#{title},
+	  writer=#{writer},
+	  bcontent=#{bcontent},
+	  btype=#{btype}
+	  where bnum=#{bnum}
+	
+	</update>
+	
+	<delete id="delete">
+	
+	  delete from jyboard where bnum=#{bnum}
+	</delete>
+	
+	
+	<!-- 조회수 올라가기 -->
+	<update id="cntUpdate" parameterType="int"> 
+	   update jyboard set
+	   bcnt= bcnt+1
+	   where bnum=#{bnum}
+	</update>
+
+
+</mapper>
