@@ -50,7 +50,11 @@
 	</select>
 	
 	<!-- 글 추가  -->
-	<insert id="insert" parameterType="co.kr.board.vo.BoardVO">
+	<insert id="insert" parameterType="co.kr.board.vo.BoardVO" useGeneratedKeys="true" keyProperty="bno">
+	    <selectKey keyProperty="bno" resultType="int" order="BEFORE">
+	    	SELECT MP_BOARD_SEQ.NEXTVAL FROM DUAL
+	    </selectKey>
+	
 	insert into jyboard (bnum,title,writer,bcontent,btype)
 	values(#{board.bnum},#{board.title},#{board.writer},#{board.bcontent},#{board.btype})
 	</insert>

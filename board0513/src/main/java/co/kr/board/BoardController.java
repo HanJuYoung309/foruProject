@@ -10,9 +10,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import co.kr.board.service.BoardService;
 import co.kr.board.service.MemberService;
@@ -121,7 +124,7 @@ public class BoardController {
 		
 	}
 	
-	//입력폼 
+	//입력폼 ++
 	@RequestMapping(value = "/insert.do" , method = RequestMethod.GET)
 	public String insertForm(Model model,HttpSession session) {
 		
@@ -136,20 +139,19 @@ public class BoardController {
 	
 	//입력
 	@RequestMapping(value = "/insertProcess.do" , method = RequestMethod.POST)
-	public ModelAndView insert(BoardVO boardVO,HttpSession session,Model model) {
+	public ModelAndView insert(@ModelAttribute BoardVO boardVO,HttpSession session,Model model
+			,MultipartHttpServletRequest mpRequest ) throws Exception {
 	
+		//session에 저장된 userid를 작성자에 할당 ->vo에 셋팅
 	    String user= (String) session.getAttribute("userid");
-		model.addAttribute("userid",user);
-			
-		ModelAndView json=new ModelAndView("jsonView");
-	
-        json.addObject("result", service.insert(boardVO));
-        
-    
 		
+		ModelAndView json=new ModelAndView("jsonView");
+	    json.addObject("result", service.insert(boardVO,mpRequest));
+     
 		return json;
 	
 	}
+	
 	
 	
 	//수정 페이지이동
@@ -170,13 +172,13 @@ public class BoardController {
 	
 	//수정
 	@RequestMapping(value = "/update.do" , method = RequestMethod.POST)
-	public ModelAndView update(int bnum,HttpSession session,Model model) {
+	public ModelAndView update(BoardVO vo,HttpSession session,Model model) {
 	
 		String user = (String) session.getAttribute("userid");
 		model.addAttribute("userid", user);
 		//return "update";
 		ModelAndView json= new  ModelAndView("jsonView");
-		json.addObject("result", service.update(bnum));
+		json.addObject("result", service.update(vo));
 		
 		
 		return json;
@@ -199,18 +201,66 @@ public class BoardController {
 		
 	
 	//삭제
-		@RequestMapping(value = "/delete.do" , method = RequestMethod.POST)
-		public ModelAndView delete(int bnum,Model model, HttpSession session) {
-			String user = (String) session.getAttribute("userid");
-			model.addAttribute("userid", user);
-			//return "update";
-			ModelAndView json= new  ModelAndView("jsonView");
-			json.addObject("result", service.delete(bnum));
-			
-			return json;
+	@RequestMapping(value = "/delete.do", method = RequestMethod.POST)
+	public ModelAndView delete(int bnum, Model model, HttpSession session) {
+		String user = (String) session.getAttribute("userid");
+		model.addAttribute("userid", user);
+		// return "update";
+		ModelAndView json = new ModelAndView("jsonView");
+		json.addObject("result", service.delete(bnum));
+
+		return json;
+
+	}
+	
+	//댓글 수정 get
+	
+	@RequestMapping(value="/replyUpdateView", method = RequestMethod.GET)
+	public String replyUpdateView(ReplyVO vo, Model model) throws Exception {
+		//logger.info("reply Write");
+		System.out.println("댓글 수정 페이지 이동 ");
 		
-		}
+		
+		model.addAttribute("replyUpdate", replyService.replyList(vo.getRnum()));
+		return "board/readUpdateView";
+	}
+	//댓글 수정 
+	@RequestMapping(value="/replyUpdate", method = RequestMethod.POST)
+	public String replyUpdate(ReplyVO vo, RedirectAttributes rttr) throws Exception {
+		System.out.println("댓글 수정 처리 ");
+		
+		replyService.updateReply(vo);
+		
+		rttr.addAttribute("bno", vo.getBnum());
+		
+		
+		return "redirect:board/getBoard.do?bnum="+vo.getBnum();
+	}
+	
+//	//댓글 삭제 폼
+//	@RequestMapping(value="/replyDeleteView", method = RequestMethod.GET)
+//	public String replyDeleteView(ReplyVO vo, Model model) throws Exception {
+//		System.out.println("댓글 삭제 페이지 이동 ");
+//		
+//		model.addAttribute("replyDelete", replyService.replyList(vo.getRnum()));
+//	
+//
+//		return "board/replyDeleteView";
+//	}
+//	
 	
 	
+	//댓글 삭제 
+	
+	@RequestMapping(value="/replyDelete", method = RequestMethod.POST)
+	public String replyDelete(ReplyVO vo, RedirectAttributes rttr) throws Exception {
+		System.out.println("댓글 삭제 ");
+		
+		replyService.deleteReply(vo);
+		
+		rttr.addAttribute("bno", vo.getBnum());
+		
+		return "redirect:getBoard.do?bnum="+vo.getBnum();
+	}
 	
 }
