@@ -12,6 +12,7 @@
 function replyDelete() {
 
 	   $.ajax({
+		   /////
 			url:"/replyDelete.do",
 			type:"POST",
 			data:$("#deleteForm").serialize(),
