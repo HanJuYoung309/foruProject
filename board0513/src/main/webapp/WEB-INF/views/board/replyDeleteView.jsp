@@ -1,41 +1,42 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <html>
-<head>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-
-</head>
-<script type="text/javascript">
-function replyDelete() {
-
-	   $.ajax({
-		   /////
-			url:"/replyDelete.do",
-			type:"POST",
-			data:$("#deleteForm").serialize(),
-			dataType:"JSON",
-				
-		  success: function (result) {
-			   console.log(result);
-			   alert("댓글 삭제 성공!");
-			   var bnum=$("bnum").val();
-			   location.href="/getBoard.do?bnum="+bnum;
-			   
-			}
-					
-	   })
-}
+	<head>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	 	<title>게시판</title>
+	</head>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var formObj = $("form[name='deleteForm']");
+			
+			$(".cancel_btn").on("click", function(){
+				location.href = "readView?bnum=${replyDelete.bnum}"
+					  
+			})
+			
+		})
+		
 	</script>
-<body>
-<h1>댓글 삭제 페이지 </h1>
-<section id="container">
-				<form name="deleteForm" role="form" >
-					<input type="hidden" name="bnum" id="bnum" value="${replyDelete.bnum}" readonly="readonly"/>
-					<input type="hidden" id="rnum" name="rnum" value="${replyDelete.rnum}" />
-				
+	<body>
+	
+		<div id="root">
+			<header>
+				<h1> 게시판</h1>
+			</header>
+			<hr />
+			 
+			<div>
+				<%@include file="nav.jsp" %>
+			</div>
+			<hr />
+			
+			<section id="container">
+				<form name="deleteForm" role="form" method="post" action="replyDelete">
+					<input type="hidden" name="bnum" value="${replyDelete.bnum}" readonly="readonly"/>
+					<input type="hidden" id="rno" name="rnum" value="${replyDelete.rnum}" />
+					 
+						
 					<div>
 						<p>삭제 하시겠습니까?</p>
 						<button type="submit" class="delete_btn">예 삭제합니다.</button>
@@ -43,5 +44,7 @@ function replyDelete() {
 					</div>
 				</form>
 			</section>
-</body>
+			<hr />
+		</div>
+	</body>
 </html>

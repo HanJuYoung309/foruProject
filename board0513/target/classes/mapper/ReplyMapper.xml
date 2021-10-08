@@ -37,6 +37,16 @@
 		WHERE rnum = #{rnum}
 	</delete>
 	
-	
+	<!-- 선택된 댓글 조회 -->
+	<select id="selectReply" resultType="co.kr.board.vo.ReplyVO">
+		SELECT
+				BNUM
+			  , RNUM
+			  , CONTENT
+			  , WRITER
+			  , REGDATE
+		  FROM MP_REPLY
+		 WHERE RNUM = #{rnum}
+	</select>
 
 </mapper>

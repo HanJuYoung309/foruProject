@@ -124,7 +124,7 @@ public class BoardController {
 		
 	}
 	
-	//입력폼 ++
+	//입력폼 
 	@RequestMapping(value = "/insert.do" , method = RequestMethod.GET)
 	public String insertForm(Model model,HttpSession session) {
 		
@@ -219,9 +219,7 @@ public class BoardController {
 	public String replyUpdateView(ReplyVO vo, Model model) throws Exception {
 		//logger.info("reply Write");
 		System.out.println("댓글 수정 페이지 이동 ");
-		
-		
-		model.addAttribute("replyUpdate", replyService.replyList(vo.getRnum()));
+		model.addAttribute("replyUpdate", replyService.selectReply(vo.getRnum()));
 		return "board/readUpdateView";
 	}
 	//댓글 수정 
@@ -234,20 +232,20 @@ public class BoardController {
 		rttr.addAttribute("bno", vo.getBnum());
 		
 		
-		return "redirect:board/getBoard.do?bnum="+vo.getBnum();
+		return "redirect:getBoard.do?bnum="+vo.getBnum();
 	}
 	
-//	//댓글 삭제 폼
-//	@RequestMapping(value="/replyDeleteView", method = RequestMethod.GET)
-//	public String replyDeleteView(ReplyVO vo, Model model) throws Exception {
-//		System.out.println("댓글 삭제 페이지 이동 ");
-//		
-//		model.addAttribute("replyDelete", replyService.replyList(vo.getRnum()));
-//	
-//
-//		return "board/replyDeleteView";
-//	}
-//	
+	//댓글 삭제 폼
+	@RequestMapping(value="/replyDeleteView", method = RequestMethod.GET)
+	public String replyDeleteView(ReplyVO vo, Model model) throws Exception {
+		System.out.println("댓글 삭제 페이지 이동 ");
+		
+		model.addAttribute("replyDelete", replyService.selectReply(vo.getRnum()));
+	
+
+		return "board/replyDeleteView";
+	}
+	
 	
 	
 	//댓글 삭제 

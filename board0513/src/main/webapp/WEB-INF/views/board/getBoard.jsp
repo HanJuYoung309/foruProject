@@ -119,17 +119,17 @@ $(".replyWriteBtn").on("click", function(){
 	
 //댓글 수정 View
 $(".replyUpdateBtn").on("click", function(){
-	 var bnum=$("#bnum").val();
-	 
-	 var rnum= $("rnum").val();
-	location.href = "replyUpdateView?bnum="+bnum+"&rnum="+rnum;
+	var bnum=$("#bnum").val();
+	location.href = "replyUpdateView?bnum="+bnum
+					+ "&rnum="+$(this).attr("data-rno");
 });
 		
 //댓글 삭제 View
 $(".replyDeleteBtn").on("click", function(){
-	 var bnum=$("#bnum").val();
-	 var rnum= $("rnum").val();
-	location.href = "replyDeleteView?bnum="+bnum+ "&rnum="+rnum;
+	var bnum=$("#bnum").val();
+	
+	location.href = "replyDeleteView?bnum="+bnum
+		+ "&rnum="+$(this).attr("data-rno");
 });
 </script>
 

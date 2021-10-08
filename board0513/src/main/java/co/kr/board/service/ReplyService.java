@@ -17,5 +17,8 @@ public interface ReplyService {
 	
 	//댓글삭제
 	public void deleteReply(ReplyVO replyVO);
+	
+	//선택된 댓글 조회
+	public ReplyVO selectReply(int rno);
 
 }

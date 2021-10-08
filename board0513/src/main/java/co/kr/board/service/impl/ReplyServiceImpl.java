@@ -42,4 +42,10 @@ public class ReplyServiceImpl implements ReplyService {
 		
 	}
 
+	@Override
+	public ReplyVO selectReply(int rno) {
+		// TODO Auto-generated method stub
+		return mapper.selectReply(rno);
+	}
+
 }

@@ -17,4 +17,6 @@ public interface ReplyMapper {
 
 	public void deleteReply(ReplyVO replyVO);
 
+	public ReplyVO selectReply(int rno);
+
 }
