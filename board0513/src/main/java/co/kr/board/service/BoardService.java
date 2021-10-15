@@ -15,7 +15,7 @@ public interface BoardService {
 
 	BoardVO getBoard(int bnum);
 
-	int insert(BoardVO boardVO, MultipartHttpServletRequest mpRequest) throws Exception;
+	int insert(BoardVO boardVO) throws Exception;
 
 	int cntMax();
 

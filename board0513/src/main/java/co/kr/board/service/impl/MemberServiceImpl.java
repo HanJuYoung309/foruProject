@@ -48,4 +48,10 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.idChk(vo);
 	}
 
+	@Override
+	public int maxCnt() {
+		// TODO Auto-generated method stub
+		return mapper.maxCnt();
+	}
+
 }

@@ -9,7 +9,21 @@ public class BoardVO {
 	private int bcnt;
 	private String bcontent;
 	private String btype;
+	private int like_cnt;
 	
+	public BoardVO(int like_cnt) {
+		super();
+		this.like_cnt = like_cnt;
+	}
+
+	public int getLike_cnt() {
+		return like_cnt;
+	}
+
+	public void setLike_cnt(int like_cnt) {
+		this.like_cnt = like_cnt;
+	}
+
 	public BoardVO() {
 		// TODO Auto-generated constructor stub
 	}
@@ -84,7 +98,7 @@ public class BoardVO {
 	@Override
 	public String toString() {
 		return "BoardVO [bnum=" + bnum + ", title=" + title + ", writer=" + writer + ", bdate=" + bdate + ", bcnt="
-				+ bcnt + ", bcontent=" + bcontent + ", btype=" + btype + "]";
+				+ bcnt + ", bcontent=" + bcontent + ", btype=" + btype + ", like_cnt=" + like_cnt + "]";
 	}
 	
 	

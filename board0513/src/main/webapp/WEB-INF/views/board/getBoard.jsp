@@ -27,48 +27,32 @@ $(document).ready( function () {
 		 location.href="/delete.do?bnum="+bnum;
 	})
 })
-/* JSP SCRIPT */
-var bbsidx = ${bbsidx};
-var useridx = ${useridx};
- 
-var btn_like = document.getElementById("btn_like");
- btn_like.onclick = function(){ changeHeart(); }
- 
-/* 좋아요 버튼 눌렀을떄 */
- function changeHeart(){ 
-     $.ajax({
-            type : "POST",  
-            url : "/clickLike",       
-            dataType : "json",   
-            data : "bbsidx="+bbsidx+"&useridx="+useridx,
-            error : function(){
-                Rnd.alert("통신 에러","error","확인",function(){});
-            },
-            success : function(jdata) {
-                if(jdata.resultCode == -1){
-                    Rnd.alert("좋아요 오류","error","확인",function(){});
-                }
-                else{
-                    if(jdata.likecheck == 1){
-                        $("#btn_like").attr("src","/home/img/ico_like_after.png");
-                        $("#likecnt").empty();
-                        $("#likecnt").append(jdata.likecnt);
-                    }
-                    else if (jdata.likecheck == 0){
-                        $("#btn_like").attr("src","/home/img/ico_like_before.png");
-                        $("#likecnt").empty();
-                        $("#likecnt").append(jdata.likecnt);
-                        
-                    }
-                }
-            }
-        });
- }
- 
+
+function like(bnum,usernum,likenum){
+	$.ajax({
+		url:"/like.do",
+		type:"POST",
+		data:{bnum:bnum , usernum:usernum , likenum:likenum},
+		dataType:"JSON",
+		success : function(result){
+			location.href = "/getBoard.do?bnum="+$("#bnum").val();
+		}
+	})
+}
+
+function likeDelete(bnum,usernum){
+	$.ajax({
+		url:"/likeDelete.do",
+		type:"POST",
+		data:{bnum:bnum , usernum:usernum},
+		dataType:"JSON",
+		success : function(result){
+			location.href = "/getBoard.do?bnum="+$("#bnum").val();
+		}
+	})
+}
 
 
-
-	
    
 </script>
 <meta charset="UTF-8">
@@ -79,6 +63,13 @@ var btn_like = document.getElementById("btn_like");
  
         <h1>글 상세보기</h1>
         
+         <c:if test="${likeBtn > 0 }">
+		<button style="border: none; background: none; font-size: 13px;" onclick="likeDelete(${board.bnum},${user.usernum})">싫어요~꾹</button>
+		</c:if>
+		<c:if test="${likeBtn <= 0 }">
+		<button style="border: none; background: none; font-size: 13px;" onclick="like(${board.bnum},${user.usernum},${likeMax })">좋아요~꾹</button>
+		</c:if>
+        
        
 		<button type="button" id="updateBtn">수정</button>
 
@@ -86,17 +77,8 @@ var btn_like = document.getElementById("btn_like");
 	
         <button > <a href="/list2.do">HOME</a> </button>
         
-        <c:choose>
-    <c:when test="${likecheck eq '0' or empty likecheck}"> <!-- likecheck가0이면 빈하트-->
-        <img src="/home/img/ico_like_before.png" 
-             id="btn_like" align="left" style="cursor:pointer; width: 20px;">
-    </c:when>
-    <c:otherwise> <!-- likecheck가1이면 빨간 하트-->
-        <img src="/home/img/ico_like_after.png" 
-              id="btn_like" align="left" style="cursor:pointer; width: 20px;">
-    </c:otherwise>
-</c:choose>
-<div id="likecnt" style="margin-left:5px;">${likecnt}</div>
+        
+      
         
         <table border="2" width="600">
         
@@ -108,22 +90,24 @@ var btn_like = document.getElementById("btn_like");
            <th>조회수</th>
            <th>내용</th>
            <th>분류</th>
+           <th>좋아요</th>
         </tr>
         
          <tr>
 	            <td>   <input type="text"  id="bnum" name="bnum" value="${board.bnum }" /></td>
 	            <td>  <input type="text" name="title" value="${board.title }" /></td>
-	            <td>  <input type="text" name="writer" value="${board.writer }" /> 
-	      </td>
+	            <td>  <input type="text" name="writer" value="${board.writer }" />  </td>
 	            <td>  <input type="text" name="bdate" value="${board.bdate }" /></td>
 	            <td>  <input type="text" name="bcnt" value="${board.bcnt }" /></td>
 	            <td> <input type="text" name="bcontent" value="${board.bcontent }" /></td>
 	            <td>  <input type="text" name="btype" value="${board.btype }" /> </td>
+	            <td><input type="text" name="board_like" value="${like}" readonly="readonly" /></td>
         </tr>
         
         
         
         </table>
+       
         <!-- 댓글 -->
         
         
@@ -160,6 +144,10 @@ var btn_like = document.getElementById("btn_like");
  	 <button type="button" class="replyWriteBtn">작성</button>
   </div>
 </form>
+
+<p>대 댓글 ....</p>
+
+
 <script type="text/javascript">
 
 $(".replyWriteBtn").on("click", function(){

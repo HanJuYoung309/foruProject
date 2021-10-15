@@ -64,6 +64,13 @@
 	<h1>회원가입</h1>
 		<section id="container">
 			<form action="register" method="post" id="regForm">
+			
+			<div class="form-group has-feedback">
+					<label class="control-label" for="usernum">회원번호</label>
+					<input class="form-control" type="text" id="usernum" name="usernum" value="${max }" />
+					
+				</div>
+				
 				<div class="form-group has-feedback">
 					<label class="control-label" for="userId">아이디</label>
 					<input class="form-control" type="text" id="userid" name="userid" />

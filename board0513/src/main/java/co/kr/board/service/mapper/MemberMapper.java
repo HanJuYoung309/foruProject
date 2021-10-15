@@ -19,4 +19,6 @@ public interface MemberMapper {
 
 	public int idChk(MemberVO vo);
 
+	public int maxCnt();
+
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class MemberVO {
 	
+	private int usernum;
 	private String userid;
 	private String userPass;
 	private String userName;
@@ -12,6 +13,30 @@ public class MemberVO {
 	public MemberVO() {
 		// TODO Auto-generated constructor stub
 	}
+
+
+	public MemberVO(int usernum, String userid, String userPass, String userName, Date regDate) {
+		super();
+		this.usernum = usernum;
+		this.userid = userid;
+		this.userPass = userPass;
+		this.userName = userName;
+		this.regDate = regDate;
+	}
+
+
+
+	public int getUsernum() {
+		return usernum;
+	}
+
+
+
+	public void setUsernum(int usernum) {
+		this.usernum = usernum;
+	}
+
+
 
 	public MemberVO(String userid, String userPass, String userName, Date regDate) {
 		//super();
@@ -55,8 +80,8 @@ public class MemberVO {
 
 	@Override
 	public String toString() {
-		return "MemberVO [userid=" + userid + ", userPass=" + userPass + ", userName=" + userName + ", regDate="
-				+ regDate + "]";
+		return "MemberVO [usernum=" + usernum + ", userid=" + userid + ", userPass=" + userPass + ", userName="
+				+ userName + ", regDate=" + regDate + "]";
 	}
 	
 

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,8 +26,12 @@ public class MemberController {
 	
 	    // 회원가입 get
 		@RequestMapping(value = "/register", method = RequestMethod.GET)
-		public String getRegister() throws Exception {
+		public String getRegister(Model model) throws Exception {
 			logger.info("get register");
+			
+			int max= service.maxCnt();
+			model.addAttribute("max",max+1);
+			
 			
 			return "user/register";
 		}
@@ -69,6 +74,7 @@ public class MemberController {
 			
 			if(login == null) {
 				session.setAttribute("member", null);
+				//session.setAttribute("usernum", null);
 				rttr.addFlashAttribute("msg", false);
 			}else {
 				session.setAttribute("member", login);

@@ -55,15 +55,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public int insert(BoardVO boardVO, MultipartHttpServletRequest mpRequest) throws Exception {
-	
-		List<Map<String, Object>> list= fileUtils.parseInsertFileInfo(boardVO, mpRequest);
-		int size = list.size();
-		for(int i=0; i<size; i++){ 
-			mapper.insertFile(list.get(i)); 
-		}
+	public int insert(BoardVO boardVO) throws Exception {
+
 		
-		return mapper.insert(boardVO,mpRequest);
+		return mapper.insert(boardVO);
 	
 		
 	}

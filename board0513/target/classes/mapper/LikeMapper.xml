@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.kr.board.service.mapper.LikeMapper">
+
+<select id="likeCnt" resultType = "int">
+		SELECT COUNT(*)
+		FROM   liketo
+		WHERE  bnum = #{bnum}
+	</select>
+	
+	<select id="likeMax" resultType = "int">
+		SELECT NVL(MAX(likenum),1)
+		FROM   liketo
+	</select>
+	
+	<select id="likeBtn" resultType="int">
+		SELECT COUNT(*) 
+		FROM   liketo
+		WHERE  usernum = #{usernum}
+		AND    bnum = #{bnum}	
+	</select>
+	
+	
+	<delete id="delete">
+		delete
+		from   liketo
+		WHERE  bnum = #{bnum}
+		AND    usernum = #{usernum}
+	</delete>
+	
+	<insert id="insert">
+		insert into
+		TEST_LIKE(likenum,
+				  bnum,
+				  usernum)
+		values    (#{likenum},
+				  #{bnum},
+				  #{usernum})
+	</insert>
+</mapper>

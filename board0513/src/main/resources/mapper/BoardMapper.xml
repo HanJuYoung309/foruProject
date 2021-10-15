@@ -50,11 +50,8 @@
 	</select>
 	
 	<!-- 글 추가  -->
-	<insert id="insert" parameterType="co.kr.board.vo.BoardVO" useGeneratedKeys="true" keyProperty="bno">
-	    <selectKey keyProperty="bno" resultType="int" order="BEFORE">
-	    	SELECT MP_BOARD_SEQ.NEXTVAL FROM DUAL
-	    </selectKey>
-	
+	<insert id="insert" parameterType="co.kr.board.vo.BoardVO">
+	   
 	insert into jyboard (bnum,title,writer,bcontent,btype)
 	values(#{board.bnum},#{board.title},#{board.writer},#{board.bcontent},#{board.btype})
 	</insert>
@@ -81,6 +78,21 @@
 	   bcnt= bcnt+1
 	   where bnum=#{bnum}
 	</update>
+	
+	<!-- 좋아요 버튼 눌렀을시  -->
+	<update id="like_check" parameterType="HashMap">
+    UPDATE liketo
+    SET like_check = like_check + 1 
+    WHERE mno=#{mno} AND boardno=#{boardno}
+  </update>
+  
+  <!-- 좋아요 버튼 취소시  -->
+  <update id="like_check_cancel" parameterType="HashMap">
+    UPDATE liketo
+    SET like_check = 0
+    WHERE mno=#{mno} AND boardno=#{boardno}
+  </update>
+
 
 
 </mapper>

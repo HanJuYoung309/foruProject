@@ -23,15 +23,26 @@
 	             $("#paging").empty();
 	             var list = result.list;
 	             for(var i = 0; i < list.length; i++){
-	                var html = "<tr>"
-	                    html+= "<td>"+list[i].bnum+"</td>"
-	                    html+= "<td><a href='getBoard.do?bnum="+list[i].bnum+"'</a>"+list[i].title+"</td>"
-	                    html+= "<td>"+list[i].writer+"</td>"
-	                    html+= "<td>"+list[i].bdate+"</td>"
-	                    html+= "<td>"+list[i].bcnt+"</td>"
-	                    html+= "<td>"+list[i].bcontent+"</td>"
-	                    html+= "<td>"+list[i].btype+"</td>"
-	                    $("#tbody").append(html)
+	            	 $.ajax({
+	 					url:"/likeSu.do",
+	 					type:"GET",
+	 					data:{bnum:list[i].bnum},
+	 					dataType:"JSON",
+	 					async: false,
+	 					success : function(likeSu){
+	 						console.log(likeSu);
+	 						var html = "<tr>"
+	 				   		html += "<td>"+list[i].bnum+"</td>"
+	 				   		html += "<td><a href = /getBoard.do?bnum="+list[i].bnum+">"+list[i].title+"</td>"
+	 				    	html += "<td>"+list[i].writer+"</td>"
+	 				   	 	html += "<td>"+list[i].bdate+"</td>"
+                            html += "<td>"+list[i].bcnt+"</td>"
+	 				   	    html += "<td>"+list[i].bcontent+"</td>"
+	 				   	    html += "<td>"+list[i].btype+"</td>"
+	 				    	html += "<td>"+likeSu.su+"</td>"
+	 						$("#tbody").append(html);				
+	 					}
+	 				})
 	             }
 	             if(result.prev){
 	                $("#paging").append("<button onclick=list("+Number(page-1)+")>이전</button>");
@@ -81,7 +92,7 @@
 	
 	
  </script>
-<h1>게시판 연습</h1>
+<h1> JUYOUNG게시판</h1>
 
        <c:if test="${member != null }">
 			<div>
@@ -121,6 +132,7 @@
       <td>조회수</td>
       <td>내용</td>
       <td>분류</td>
+      <td>좋아요</td>
    </tr>
    <tbody id="tbody"></tbody>
 </table>

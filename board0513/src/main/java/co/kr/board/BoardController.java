@@ -1,26 +1,32 @@
 package co.kr.board;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import co.kr.board.service.BoardService;
+import co.kr.board.service.LikeService;
 import co.kr.board.service.MemberService;
 import co.kr.board.service.ReplyService;
 import co.kr.board.vo.BoardVO;
+import co.kr.board.vo.LiketoVO;
 import co.kr.board.vo.MemberVO;
 import co.kr.board.vo.ReplyVO;
 
@@ -37,6 +43,9 @@ public class BoardController {
 	
 	@Autowired
 	public MemberService memberService;
+	
+	@Autowired
+	public LikeService likeService;
 	
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -110,14 +119,27 @@ public class BoardController {
 	
 	//상세보기
 	@RequestMapping(value = "/getBoard.do", method = RequestMethod.GET)
-	public String getBoard(Model model,int bnum) {
+	public String getBoard(Model model,int bnum,HttpSession session,HttpServletRequest req) {
 		//BoardVO boardVO= new BoardVO();
 		service.cntUpdate(bnum);
-
-	    BoardVO board= service.getBoard(bnum);
-		model.addAttribute("board",board);
 		
+		int likeCnt= likeService.likeCnt(bnum);
+		
+		int likeMax =likeService.likeMax();
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		int usernum = Integer.parseInt(session.getAttribute("member").toString());
+		 
+		System.out.println("회원번호 :"+usernum);
+		
+		int likeBtn = likeService.likeBtn(param);
+	    BoardVO board= service.getBoard(bnum);
 	
+		model.addAttribute("likeMax", likeMax+1);
+		model.addAttribute("likeBtn", likeBtn);
+		model.addAttribute("like", likeCnt);
+		model.addAttribute("user", usernum);
+		model.addAttribute("board",board);
+		//댓글 
 		List<ReplyVO> replyList= replyService.replyList(board.getBnum());
 		model.addAttribute("replyList",replyList);
 		return "board/getBoard";
@@ -139,14 +161,13 @@ public class BoardController {
 	
 	//입력
 	@RequestMapping(value = "/insertProcess.do" , method = RequestMethod.POST)
-	public ModelAndView insert(@ModelAttribute BoardVO boardVO,HttpSession session,Model model
-			,MultipartHttpServletRequest mpRequest ) throws Exception {
+	public ModelAndView insert(@ModelAttribute BoardVO boardVO,HttpSession session,Model model) throws Exception {
 	
 		//session에 저장된 userid를 작성자에 할당 ->vo에 셋팅
 	    String user= (String) session.getAttribute("userid");
 		
 		ModelAndView json=new ModelAndView("jsonView");
-	    json.addObject("result", service.insert(boardVO,mpRequest));
+	    json.addObject("result", service.insert(boardVO));
      
 		return json;
 	
@@ -261,4 +282,7 @@ public class BoardController {
 		return "redirect:getBoard.do?bnum="+vo.getBnum();
 	}
 	
+	
+
+
 }

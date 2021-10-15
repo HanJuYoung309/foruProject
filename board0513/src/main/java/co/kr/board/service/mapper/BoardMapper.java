@@ -21,7 +21,7 @@ public interface BoardMapper {
 
 	BoardVO getBoard(int bnum);
 
-	int insert(@Param("board")  BoardVO  boardVO, MultipartHttpServletRequest mpRequest);
+	int insert(@Param("board")  BoardVO  boardVO);
 
 	int cntMax();
 
